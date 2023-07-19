@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        label {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #ffd700; /* gold */
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #fbc62e; /* lighter gold on hover */
+        }
+    </style>
+    
+        <title>Submit Data</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <h1>Submit Your Data</h1>
+        <form method="POST" action="/submit">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+    
+            <label for="phoneNumber">Phone Number:</label>
+            <!-- Country code dropdown list -->
+            <select id="countryCode" name="countryCode">
+                <option value="1">+1 (United States)</option>
+                <option value="91">+91 (India)</option>
+                <!-- Add more options for other country codes as needed -->
+            </select>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required><br>
+            <div id="phone-error-message" style="color: red;"></div> <!-- Error message element -->
+    
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required><br>
+            
+            <input type="submit" value="Submit">
+        </form>
+        
+        <script>
+            $(document).ready(function () {
+                // Bind an event handler for the 'input' event on the phone number input field
+                $('#phoneNumber').on('input', function () {
+                    var phoneNumber = $(this).val();
+        
+                    // Remove any non-numeric characters from the phone number
+                    phoneNumber = phoneNumber.replace(/\D/g, '');
+        
+                    // Check if phone number has a valid country code and if it exceeds 10 digits in total
+                    if (phoneNumber.length < 10) {
+                        $('#phone-error-message').text('Invalid phone number: Phone number should be at least 10 digits.');
+                    } else {
+                        // Extract the country code from the dropdown list
+                        var countryCode = $('#countryCode').val();
+        
+                        // Check if the country code is valid (you may adjust the allowed country codes as needed)
+                        if (countryCode !== '1' && countryCode !== '91') {
+                            $('#phone-error-message').text('Invalid country code: Currently, only country codes 1 and 91 are allowed.');
+                        } else {
+                            $('#phone-error-message').text('');
+                        }
+                    }
+                });
+        
+            });
+        </script>    
+    </body>
+    
+
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Data Form</title>
+</head>
+<body>
+    <h1>User Data Form</h1>
+    <form method="POST" action="/">
+        {{ form.csrf_token }}
+        {{ form.name.label }} {{ form.name }}<br>
+        {{ form.location.label }} {{ form.location }}<br>
+        <input type="submit" value="Generate PDF">
+    </form>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatBot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #chat-box {
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #fff;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        #logo {
+            width: 150px;
+            height: 150px;
+            display: block;
+            margin: 0 auto;
+            margin-top: 20px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="./wolf_logo.png" alt="Wolf Logo" id="logo">
+        <h1>I'm Wolfie</h1>
+        <p>Type 'exit' to end our conversation.</p>
+    </div>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" onkeydown="handleKey(event)">
+    <script>
+        function handleKey(event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+            }
+        }
+
+        function appendMessage(sender, message) {
+            const chatBox = document.getElementById("chat-box");
+            const messageElement = document.createElement("p");
+            messageElement.textContent = `${sender}: ${message}`;
+            chatBox.appendChild(messageElement);
+        }
+
+        function sendMessage() {
+            const user_input = document.getElementById("user-input").value;
+            appendMessage("You", user_input);
+            document.getElementById("user-input").value = "";
+
+            fetch("/get_response", {
+                method: "POST",
+                body: new URLSearchParams({ "user_input": user_input }),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => response.text())
+            .then(message => appendMessage("ChatBot", message));
+        }  
+    </script>
+</body>
+</html>

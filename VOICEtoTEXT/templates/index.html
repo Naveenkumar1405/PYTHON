@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech to Text</title>
+</head>
+<body>
+    <h1>Speech to Text</h1>
+    <button id="startBtn">Start Listening</button>
+    <div id="result"></div>
+    <form action="/stop" method="post">
+        <button type="submit">Stop</button>
+      </form>
+      
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onstart = function() {
+                console.log('Listening started...');
+            };
+
+            recognition.onresult = function(event) {
+                var result = event.results[event.results.length - 1][0].transcript;
+                console.log('Result:', result);
+                $('#result').text(result);
+
+                // Send the audio data to the server for transcription
+                var formData = new FormData();
+                formData.append('audio', result);
+
+                $.ajax({
+                    url: '/speech-to-text',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log('Transcribed Text:', response.text);
+                    },
+                    error: function(error) {
+                        console.error('Error:', error.responseJSON.error);
+                    }
+                });
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Recognition error:', event.error);
+            };
+
+            $('#startBtn').click(function() {
+                recognition.start();
+            });
+        });
+    </script>
+</body>
+</html>
