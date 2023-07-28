@@ -1,10 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials, db
 
-# Replace 'path/to/serviceAccountKey.json' with the path to your downloaded service account key
 cred = credentials.Certificate('./ServiceAccountKey.json')
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://learning-d5a85-default-rtdb.asia-southeast1.firebasedatabase.app/Employees'  # Replace 'your-project-id' with your Firebase project ID
+    'databaseURL': 'https://learning-d5a85-default-rtdb.asia-southeast1.firebasedatabase.app/Employees'
 })
 
 def add_employee_data(data):
@@ -21,7 +20,6 @@ def read_employee_data():
         snapshot = ref.get()
         
         if snapshot:
-            # If data is available in the snapshot
             print("Employee data:")
             for key, value in snapshot.items():
                 print(f"ID: {key}, Name: {value['Name']}, Contact: {value['Contact']}, Role: {value['Role']}")

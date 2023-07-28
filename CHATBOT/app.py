@@ -2,7 +2,6 @@ import nltk
 from nltk.chat.util import Chat, reflections
 from flask import Flask, render_template, request
 
-# Initialize the chatbot with chatbot pairs
 pairs = [
     [
         r"hi|hello|hey",

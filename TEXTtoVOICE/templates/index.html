@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Speech</title>
+    <!-- Add the CSS link to your preferred stylesheet if needed -->
+</head>
+<body>
+    <h1>Text to Speech</h1>
+    <div>
+        <input type="text" id="textInput" placeholder="Enter text...">
+        <button id="playBtn">Play</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#playBtn').click(function() {
+                var text = $('#textInput').val();
+                $.ajax({
+                    url: '/text-to-speech',
+                    type: 'POST',
+                    data: { text: text },
+                    success: function(response) {
+                        console.log(response.message);
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

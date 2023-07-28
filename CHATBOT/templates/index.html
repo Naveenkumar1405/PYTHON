@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ChatBot</title>
+    <title>WOLFIE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: grey;
             margin: 0;
             padding: 0;
         }
 
         #header {
-            background-color: #4CAF50;
-            color: #fff;
+            background-color:grey;
+            color: white;
             text-align: center;
             padding: 10px;
         }
@@ -25,7 +25,7 @@
             min-height: 200px;
             max-height: 400px;
             overflow-y: auto;
-            background-color: #fff;
+            background-color: white;
         }
 
         #user-input {
@@ -38,8 +38,8 @@
         }
 
         #logo {
-            width: 150px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             display: block;
             margin: 0 auto;
             margin-top: 20px;
@@ -50,7 +50,7 @@
 </head>
 <body>
     <div id="header">
-        <img src="./wolf_logo.png" alt="Wolf Logo" id="logo">
+        <img src="https://www.vecteezy.com/vector-art/21007892-awesome-angry-wolf-logo-design" alt="Wolf Logo" id="logo">
         <h1>I'm Wolfie</h1>
         <p>Type 'exit' to end our conversation.</p>
     </div>
@@ -75,6 +75,7 @@
             appendMessage("You", user_input);
             document.getElementById("user-input").value = "";
 
+            // Replace the fetch URL with your server endpoint to get the response from the chatbot.
             fetch("/get_response", {
                 method: "POST",
                 body: new URLSearchParams({ "user_input": user_input }),

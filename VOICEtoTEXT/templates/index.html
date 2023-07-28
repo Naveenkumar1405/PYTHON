@@ -2,15 +2,75 @@
 <html>
 <head>
     <title>Speech to Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #008CBA;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005A70;
+        }
+
+        button[type="submit"] {
+            background-color: #dc3545;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #b02a37;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Speech to Text</h1>
-    <button id="startBtn">Start Listening</button>
-    <div id="result"></div>
-    <form action="/stop" method="post">
-        <button type="submit">Stop</button>
-      </form>
-      
+    <div id="container">
+        <h1>Speech to Text</h1>
+        <div>
+            <button id="startBtn">Start Listening</button>
+            <form action="/stop" method="post">
+                <button type="submit">Stop</button>
+            </form>
+        </div>
+        <div id="result"></div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

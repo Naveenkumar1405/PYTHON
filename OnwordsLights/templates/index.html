@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Device States</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Device States</h1>
+    <table>
+        <tr>
+            <th>Device ID</th>
+            <th>Device 1</th>
+            <th>Device 2</th>
+            <th>Device 3</th>
+        </tr>
+        {% for device in devices %}
+        <tr>
+            <td>{{ device.id }}</td>
+            <td>{{ "ON" if device.device1 else "OFF" }}</td>
+            <td>{{ "ON" if device.device2 else "OFF" }}</td>
+            <td>{{ "ON" if device.device3 else "OFF" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
