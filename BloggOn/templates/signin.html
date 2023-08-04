@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../static/img/letter-b.png">
+    <title>Sign In</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('../static/img/signin.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            color:white;
+
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 100px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            text-align: center;
+            color: #007bff;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sign In</h1>
+        <form action="/signin" method="post" id="signinForm">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <p class="message">Don't have an account? <a href="/signup">Register</a></p>
+        <button id="forgotPasswordBtn" onclick="openForgotPasswordModal()">Forgot Password</button>
+    </div>
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForgotPasswordModal()">&times;</span>
+            <h2>Forgot Password</h2>
+            <p>Please enter your registered email address to receive an OTP.</p>
+            <form id="forgotPasswordForm" onsubmit="sendOTP(event)">
+                <input type="email" name="email" placeholder="Email" required>
+                <button type="submit">Send OTP</button>
+            </form>
+        </div>
+    </div>
+    <div id="verifyOTPModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeVerifyOTPModal()">&times;</span>
+            <h2>Verify OTP</h2>
+            <p>Please enter the OTP sent to your email to continue.</p>
+            <form id="verifyOTPForm">
+                <input type="text" id="otpInput" name="otp" placeholder="Enter OTP" required>
+                <button type="submit">Verify OTP</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function openForgotPasswordModal() 
+        {
+            var modal = document.getElementById('forgotPasswordModal');
+            modal.style.display = 'block';
+        }
+
+        function closeForgotPasswordModal() 
+        {
+            var modal = document.getElementById('forgotPasswordModal');
+            modal.style.display = 'none';
+        }
+
+        function sendOTP(event) 
+        {
+            event.preventDefault();
+            var form = document.getElementById('forgotPasswordForm');
+            var email = form.elements['email'].value;
+            alert('OTP will be sent to: ' + email);
+            closeForgotPasswordModal();
+        }
+
+        window.onclick = function(event) 
+        {
+            var modal = document.getElementById('forgotPasswordModal');
+            if (event.target === modal) 
+            {
+                closeForgotPasswordModal();
+            }
+            function signIn(event) 
+            {
+                event.preventDefault();
+                var form = document.getElementById('signinForm');
+                var formData = new FormData(form);
+        
+                fetch('/signin', 
+                {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.text())
+                .then(message => 
+                {
+                    alert(message);
+                    if (message === 'Login successful.') 
+                    {
+                        window.location.href = '/homepage';
+                    }
+                })
+                .catch(error => 
+                {
+                    console.error('Error signing in:', error);
+                });
+            };
+        }
+            
+            var signinForm = document.getElementById('signinForm');
+            signinForm.onsubmit = signIn;
+            function sendOTP(event) 
+        {
+            event.preventDefault();
+            var form = document.getElementById('forgotPasswordForm');
+            var email = form.elements['email'].value;
+
+            fetch('/forgot_password', 
+            {
+                method: 'POST',
+                headers: 
+                {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'email=' + encodeURIComponent(email),
+            })
+            .then(response => response.text())
+            .then(message => 
+            {
+                alert(message);
+                closeForgotPasswordModal();
+                if (message.includes('OTP has been sent')) 
+                {
+                    showVerifyOTPModal(email);
+                }
+            })
+            .catch(error => 
+            {
+                console.error('Error sending OTP:', error);
+            });
+        }
+
+        function showVerifyOTPModal(email) 
+        {
+            var modal = document.getElementById('verifyOTPModal');
+            var otpInput = document.getElementById('otpInput');
+            otpInput.value = '';
+            modal.style.display = 'block';
+
+            var verifyOTPForm = document.getElementById('verifyOTPForm');
+            verifyOTPForm.onsubmit = function(event) 
+            {
+                event.preventDefault();
+                var otp = otpInput.value;
+
+                fetch('/verify_otp', 
+                {
+                    method: 'POST',
+                    headers: 
+                    {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'email=' + encodeURIComponent(email) + '&otp=' + encodeURIComponent(otp),
+                })
+                .then(response => response.text())
+                .then(message => 
+                {
+                    alert(message);
+                    if (message === 'OTP verification successful.') 
+                    {
+                        window.location.href = '/homepage';
+                    }
+                })
+                .catch(error => 
+                {
+                    console.error('Error verifying OTP:', error);
+                });
+            };
+        }
+    </script>
+</body>
+</html>

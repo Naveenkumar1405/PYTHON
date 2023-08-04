@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../static/img/letter-b.png">
+    <title>BloggOn</title>
+    <style>
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            z-index: 100;
+        }        
+        .navbar * {
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            text-decoration: none;
+            border: none;
+            outline: none;
+            background-color: inherit;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: grey;
+            padding:10px;
+        }
+        
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            color:white;
+            justify-items:stretch;
+        }
+
+        .navbar li {
+            margin: 0 10px;
+        }
+
+        .signin-signup {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .signin-signup a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .dropdown {
+            float: left;
+            overflow: hidden;
+        }
+
+        .dropdown .dropbtn {
+            font-size: 16px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 16px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+        }
+
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: grey;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Improved search bar styles */
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .search-form input[type="text"] {
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 5px 0 0 5px;
+            background-color: transparent;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .search-form input[type="text"]:focus {
+            outline: none;
+            background-color: #333;
+        }
+
+        .search-form button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            transition: background .4s ease-in;
+            background-image: url('../static/img/homepage.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        body.blue {
+            background-color: #428aa6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .card {
+            position: absolute;
+            width: 60%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transition: transform .4s ease;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            max-height: 600px;
+            height: 100%;
+            transform-style: preserve-3d;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cards {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin-bottom: 20px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        #item-1:checked ~ .cards #blog-3, #item-2:checked ~ .cards #blog-1, #item-3:checked ~ .cards #blog-2 {
+            transform: translatex(-40%) scale(.8);
+            opacity: 1;
+            z-index: 0;
+        }
+
+        #item-1:checked ~ .cards #blog-2, #item-2:checked ~ .cards #blog-3, #item-3:checked ~ .cards #blog-1 {
+            transform: translatex(40%) scale(.8);
+            opacity: 1;
+            z-index: 0;
+        }
+
+        #item-1:checked ~ .cards #blog-1, #item-2:checked ~ .cards #blog-2, #item-3:checked ~ .cards #blog-3 {
+            transform: translatex(0) scale(1);
+            opacity: 1;
+            z-index: 1;
+
+            img {
+                box-shadow: 0px 0px 5px 0px rgba(81, 81, 81, 0.47);
+            }
+        }
+        .landing-page {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .landing-page h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .landing-page p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .landing-page ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .landing-page ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .landing-page ul li:last-child {
+            margin-right: 0;
+        }
+        
+        .landing-page a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        
+        .landing-page a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Blog list styles */
+        .blog-list {
+            list-style: none;
+        }
+        
+        .blog-item {
+            margin-bottom: 10px;
+        }
+        
+        .blog-item a {
+            display: block;
+            font-size: 20px;
+            color: #333;
+            text-decoration: none;
+        }
+        
+        .blog-item a:hover {
+            color: #007bff;
+        }
+        
+        /* Media query for responsiveness */
+        @media screen and (max-width: 600px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+        .logo {
+            width: 30pxpx;
+            height: 30px;
+          }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <a class="navbar-brand" href="/">
+                <img src="../static/img/letter-b.png" alt="Logo" class="logo">
+              </a>
+            <h4><a href="#">BloggOn</a><h4>
+            <li>
+                <div class="dropdown">
+                    <button class="dropbtn">Catagories
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Personal Development</a>
+                        <a href="#">Health & Fitness</a>
+                        <a href="#">Travel</a>
+                        <a href="#">Food/Cooking</a>
+                        <a href="#">Fashion & Beauty</a>
+                        <a href="#">Finance</a>
+                        <a href="#">Tech & Gadgets</a>
+                        <a href="#">Business & Entrepreneurship</a>
+                        <a href="#">Education & Career</a>
+                        <a href="#">Home & Garden</a>
+                        <a href="#">Parenting & Family</a>
+                        <a href="#">Arts & Crafts</a>
+                        <a href="#">Self-Sufficiency/Survival</a>
+                        <a href="#">Photography</a>
+                        <a href="#">Gaming</a>
+                        <a href="#">Science & Nature</a>
+                        <a href="#">Books & Literature</a>
+                        <a href="#">Movies & TV Shows</a>
+                        <a href="#">Environment & Sustainability</a>
+                    </div>
+                </div>
+            </li>
+            <li><a href="#">Podcasts</a></li>
+            <li><a href="#">Top Blogs</a></li>
+            <li><a href="#">Top Bloggers</a></li>
+            <li class="search-form">
+                <form action="#" method="get">
+                    <input type="text" placeholder="............................................">
+                    <button type="submit">Search</button>
+                </form>
+            </li>
+            <li class="signin-signup">
+                {% if session.email %}
+             <a href="{{ url_for('signout') }}">Sign Out</a>
+                {% else %}
+               <a href="{{ url_for('signin') }}">Sign In</a>
+                <a href="{{ url_for('signup') }}">Sign Up</a>
+                {% endif %}
+            </li>
+            <li><a href="/account">Account</a></li>
+            <li><a href="{{ url_for('create_blog') }}">Create Blog</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <input type="radio" name="slider" id="item-1" checked>
+        <input type="radio" name="slider" id="item-2">
+        <input type="radio" name="slider" id="item-3">
+      <div class="cards">
+        <label class="card" for="item-1" id="blog-1">
+          <img src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80" alt="blog">
+        </label>
+        <label class="card" for="item-2" id="blog-2">
+          <img src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80" alt="blog">
+        </label>
+        <label class="card" for="item-3" id="blog-3">
+          <img src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="blog">
+        </label>
+        </div>
+        </div>
+    </div>
+    <div class="landing-page" method="get" action="get">
+        {% if blogs %}
+    <ul class="blog-list">
+        {% for blog in blogs %}
+            <div>
+                <h2>{{ blog.title }}</h2>
+                <p>{{ blog.description }}</p>
+                <a href="{{ url_for('blog_article', blog_id=blog._id) }}">Read More</a>
+            </div>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No blogs found.</p>
+{% endif %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let userIsSignedIn = true;
+
+            const signinSignupContainer = document.querySelector('.signin-signup');
+            const signinLink = signinSignupContainer.querySelector('a[href="signin.html"]');
+            const signupLink = signinSignupContainer.querySelector('a[href="signup.html"]');
+
+            function updateSigninStatus() {
+                if (userIsSignedIn) {
+                    signinLink.textContent = 'Sign Out';
+                    signinLink.href = '#';
+                    signupLink.style.display = 'none';
+                } else {
+                    signinLink.textContent = 'Sign In';
+                    signinLink.href = 'signin.html';
+                    signupLink.style.display = 'inline';
+                }
+            }
+
+            function signOut() {
+                userIsSignedIn = false;
+                updateSigninStatus();
+                console.log("User data cleared and signed out successfully.");
+            }
+
+            signinLink.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                if (userIsSignedIn) {
+                    signOut();
+                } else {
+                    userIsSignedIn = true;
+                    updateSigninStatus();
+                }
+            });
+            updateSigninStatus();
+        });
+        $('input').on('change', function() {
+            $('body').toggleClass('blue');
+          });
+          
+    </script>
+</body>
+</html>

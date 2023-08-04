@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../static/img/letter-b.png">
+    <title>BloggOn - User Profile</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 500px;
+            height: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-image: url('../static/img/background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="tel"],
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            transition: box-shadow 0.3s;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="password"]:focus,
+        form input[type="tel"]:focus,
+        form textarea:focus {
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        form input[type="file"] {
+            display: none;
+        }
+
+        form label[for="profile_pic"] {
+            background-color: black;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        form label[for="profile_pic"]:hover {
+            background-color: #45a049;
+        }
+
+        #profile_pic_preview img {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+            margin: 10px auto;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        form textarea {
+            resize: vertical;
+        }
+
+        form input[type="submit"] {
+            background-color: black;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .messages {
+            background-color: #333;
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .messages ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .messages li {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        #change-password-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            margin: 10px auto;
+            transition: background-color 0.3s;
+        }
+
+        #change-password-btn:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+        }
+
+        @media (max-height: 768px) {
+            .container {
+                height: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Profile Settings</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ user_data.name }}">
+            <label for="profile_pic">Change Profile Picture</label>
+            <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+            <div id="profile_pic_preview">
+                <div class="profile-picture-container">
+                    {% if existing_profile_pic_b64 %}
+                        <img src="data:image/jpeg;base64, {{ existing_profile_pic_b64 }}" alt="Profile Picture">
+                    {% else %}
+                        <img src="/static/default_profile_picture.jpg" alt="Default Profile Picture">
+                    {% endif %}
+                </div>
+            </div>
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio">{{ user_data.bio }}</textarea>
+            <label for="social_media_links">Social Media Links:</label>
+            <textarea id="social_media_links" name="social_media_links">{{ user_data.social_media_links }}</textarea>
+            <button type="button" id="change-password-btn">Change Password</button>
+            <input type="submit" value="Update Profile">
+        </form>
+    </div>
+    <script>
+        const profilePicInput = document.getElementById("profile_pic");
+        const profilePicPreview = document.getElementById("profile_pic_preview");
+        
+        profilePicInput.addEventListener("change", function () {
+          const file = this.files[0];
+        
+          if (file) {
+            const reader = new FileReader();
+        
+            reader.addEventListener("load", function () {
+              const image = new Image();
+              image.src = reader.result;
+        
+              profilePicPreview.innerHTML = "";
+              profilePicPreview.appendChild(image);
+            });
+        
+            reader.readAsDataURL(file);
+          } else {
+            profilePicPreview.innerHTML = "";
+          }
+        });
+        document.getElementById("change-password-btn").addEventListener("click", function () {
+            var newPassword = prompt("Enter your new password:");
+            if (newPassword !== null) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/update_password", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            alert("Password updated successfully!");
+                        } else {
+                            alert("Failed to update password. Please try again.");
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({ password: newPassword }));
+            }
+        });
+    </script>
+</body>
+</html>

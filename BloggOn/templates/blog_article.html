@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../static/img/letter-b.png">
+    <title>{{ blog.blog_title }}</title>
+    <style>
+        /* Add some basic styles to improve the overall look */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Style the header and main content area */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Style the Like, Comment, and Bookmark sections */
+        .blog-section {
+            margin-bottom: 20px;
+        }
+
+        .blog-section p {
+            font-weight: bold;
+        }
+
+        .blog-section button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        .blog-section button:hover {
+            background-color: #555;
+        }
+
+        /* Style the comments list */
+        #comments_list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #comments_list li {
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        /* Add background image */
+        body {
+            background-image: url('../static/img/homepage.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ blog.blog_title }}</h1>
+    </header>
+    <main>
+        <p>{{ blog.blog_text }}</p>
+
+        <!-- Likes -->
+        <div class="blog-section">
+            <p>Likes: <span id="likes">{{ blog.likes }}</span></p>
+            <button id="like_btn" onclick="handleLike()">Like</button>
+        </div>
+
+        <!-- Comments -->
+        <div class="blog-section">
+            <p>Comments: <span id="comments_count">{{ blog.comments|length }}</span></p>
+            <ul id="comments_list">
+                {% for comment in blog.comments %}
+                    <li>{{ comment }}</li>
+                {% endfor %}
+            </ul>
+            <textarea id="comment_input" rows="3" cols="50"></textarea>
+            <button onclick="handleComment()">Add Comment</button>
+        </div>
+
+        <!-- Bookmark -->
+        <div class="blog-section">
+            <p>Bookmark: <span id="bookmarks">{{ blog.bookmarks }}</span></p>
+            <button id="bookmark_btn" onclick="handleBookmark()">Bookmark</button>
+        </div>
+    </main>
+    <script>
+        function handleLike() {
+            fetch(window.location.pathname, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'like_btn': true
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likesSpan = document.getElementById('likes');
+                likesSpan.textContent = data.likes;
+            })
+            .catch(error => {
+                console.error('Error handling like:', error);
+            });
+                
+        }
+
+        function handleComment() {
+            const commentInput = document.getElementById('comment_input');
+            const comment = commentInput.value.trim();
+            if (comment) {
+                fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'comment_btn': true,
+                        'comment': comment
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update the comments count and comments list
+                    const commentsCountElement = document.getElementById('comments_count');
+                    const commentsList = document.getElementById('comments_list');
+
+                    commentsCountElement.textContent = data.comments_count;
+
+                    const newComment = document.createElement('li');
+                    newComment.textContent = comment;
+                    commentsList.appendChild(newComment);
+
+                    commentInput.value = '';
+                })
+                .catch(error => {
+                    console.error('Error handling comment:', error);
+                });
+            }
+        }
+
+        function handleBookmark() {
+            fetch(window.location.pathname, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    'bookmark_btn': true
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Blog bookmarked!");
+            })
+            .catch(error => {
+                console.error('Error handling bookmark:', error);
+            });
+        }
+    </script>
+</body>
+</html>
